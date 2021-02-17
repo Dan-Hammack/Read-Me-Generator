@@ -3,35 +3,34 @@ const inquirer = require("inquirer");
 const generateMarkdown = require("./generate.js");
 const axios = require("axios");
 
-function askQuestions(){
-    inquirer.prompt([
+const questions = [
                 {
             type: "input",
             message: "what would you like to name this project?",
             name: "name"
         },
                 {
-            type: "input"
+            type: "input",
             message:"how would you like to describe this project?",
             name: "description"
         },
                 {
-            type: "input"
+            type: "input",
             message: "how would someone install your project?",
             name: "installation"
         },
                 {
-            type: "input"
+            type: "input",
             message: "how would a user run this project?",
             name: "usage"
         },
                 {
-            type: "input"
+            type: "input",
             message: "enter the names of anyone who contributed to this project",
             name: "conribution"
         },
                         {
-            type: "checkbox"
+            type: "checkbox",
             message: "select a license, if none please hit enter",
             choices: [
                 "MIT",
@@ -61,14 +60,19 @@ function askQuestions(){
             name:
         },
         
-    ])
+    ]
 
     function getLicense(answers) {
         let badge = "";
     if (answers.promptFileUserLicense === "MIT") {
-        licenseURL = "https://opensource.org/licenses/MIT";
+        licenseURL = "[MIT License](https://spdx.org/licenses/MIT.html)";
+    } else if (answers.promptFileUserLicense === "Apache") {
+        licenseURL = "[![Apache License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)]";
+    } else if (answers.promptFileUserLicense === "ISC")
+        licenseURL = "[ISC License](https://spdx.org/licenses/ISC.html)";
+
     }
-}
+
 function generateMarkdown(answers) {
     getLicense(answers)
 
