@@ -1,6 +1,7 @@
 const fs = require("fs");
 const inquirer = require("inquirer");
 const generateMarkdown = require("./generate.js");
+const axios = require("axios");
 
 function askQuestions(){
     inquirer.prompt([
@@ -11,7 +12,7 @@ function askQuestions(){
         },
                 {
             type: "input"
-            message: "how would you like to describe this project?",
+            message:"how would you like to describe this project?",
             name: "description"
         },
                 {
