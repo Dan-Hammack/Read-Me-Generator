@@ -1,7 +1,8 @@
 const fs = require("fs");
 const inquirer = require("inquirer");
-const generateMarkdown = require("./generate.js");
+const generateMarkdown = require("./util/generate");
 const axios = require("axios");
+
 
 const questions = [
                 {
@@ -49,16 +50,6 @@ const questions = [
             message: "what is your email?",
             name: "email"
         },
-                {
-            type: 
-            message: 
-            name:
-        },
-                {
-            type: 
-            message: 
-            name:
-        },
         
     ]
 
@@ -67,45 +58,31 @@ const questions = [
     if (answers.promptFileUserLicense === "MIT") {
         licenseURL = "[MIT License](https://spdx.org/licenses/MIT.html)";
     } else if (answers.promptFileUserLicense === "Apache") {
-        licenseURL = "[![Apache License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)]";
+        licenseURL = "[Apache License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)]";
     } else if (answers.promptFileUserLicense === "ISC")
         licenseURL = "[ISC License](https://spdx.org/licenses/ISC.html)";
 
     }
 
-function generateMarkdown(answers) {
-    getLicense(answers)
 
-    return'# ${answers.promptFileName}
-
-    ![](https://img.shields.io/badge/License-${licenseImg})
-
-    ## Table of Contents
-    1.  [Desciption](#description)
-    2.  [Installation](#installation)
-    3.  [Usage](#usage)
-    4.  [License] (#license)
-    5.  [Contirbution] (#contribution)
-    6.  [Questions] (#questions)
-
-    ## Description
-    This generates ReadMes quickly and easily
-
-    ## Installation Instructions
-    Clone the repo to your local devicePixelRatio
-    
-    ## Usage Information 
-    node index
-
-    ## License
-    MIT
-
-    ## Contirbutors
-    Dan Hammack
-
-    ## Questions
-    Contact Me:
-
-    Github: [https://github.com/Dan-Hammack] (https://github.com/Dan-Hammack)
-    Email: [danhamma@gmail.com] (danhamma@gmail.com)
+function init() {
+  inquirer.prompt(questions).then(answers => {
+    console.log(answers);
+    axios
+      .get("https://api.github.com/users/" + answers.username)
+      .then(response => {
+        console.log(response);
+        var imageURL = response.data.avatar_url;
+        answers.image = imageURL;
+        console.log(imageURL);
+        fs.writeFile("README.md", generateMarkdown(answers), function(err) {
+          if (err) {
+            throw err;
+          }
+        });
+      });
+  });
 }
+
+init();
+
