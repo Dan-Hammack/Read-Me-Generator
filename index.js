@@ -1,14 +1,17 @@
 const fs = require("fs");
 const inquirer = require("inquirer");
 const generateMarkdown = require("./util/generate");
-const axios = require("axios");
+const util = require("util")
 
 
+
+//function promptUser(){
+    //return inquirer.prompt([
 const questions = [
                 {
             type: "input",
             message: "what would you like to name this project?",
-            name: "name"
+            name: "name",
         },
                 {
             type: "input",
@@ -33,12 +36,12 @@ const questions = [
                         {
             type: "checkbox",
             message: "select a license, if none please hit enter",
+            name: "license",
             choices: [
                 "MIT",
                 "Apache",
                 "ISC"
             ],
-            name: "license"
         },
                 {
             type: "input",
@@ -49,9 +52,10 @@ const questions = [
             type: "input",
             message: "what is your email?",
             name: "email"
-        },
+        }
         
-    ]
+    ]//);
+//}
 
     function getLicense(answers) {
         let badge = "";
@@ -64,25 +68,52 @@ const questions = [
 
     }
 
-
-function init() {
-  inquirer.prompt(questions).then(answers => {
-    console.log(answers);
-    axios
-      .get("https://api.github.com/users/" + answers.username)
-      .then(response => {
-        console.log(response);
-        var imageURL = response.data.avatar_url;
-        answers.image = imageURL;
-        console.log(imageURL);
-        fs.writeFile("README.md", generateMarkdown(answers), function(err) {
-          if (err) {
-            throw err;
-          }
-        });
-      });
-  });
+function writeToFile(fileName, answers) {
+    fs.writeToFile(fileName, answers, function(err) {
+        if (err) {
+            console.log(err);
+            return
+        }
+        console.log ("Success!");
+    })
 }
 
-init();
 
+function init() {
+    inquirer.prompt(questions)
+    .then(function(answers){
+        writeToFile("Readme" ,generateMarkdown(answers));
+    })
+}
+
+const generate = (answers) => 
+
+`
+
+# ${answers.title}
+
+## Table of Contents
+1.  [Desciption](#description)
+2.  [Installation](#installation)
+3.  [Usage](#usage)
+4.  [License] (#license)
+5.  [Contirbution] (#contribution)
+6.  [Questions] (#questions)
+### Description
+${answers.description}
+### Installation Instructions
+${answers.description}    
+### Usage Information 
+${answers.installation}
+### License
+${answers.license}
+### Contirbutors
+${answers.contribution}
+### Questions
+${answers.questions}
+### Github
+[https://github.com/Dan-Hammack] (https://github.com/Dan-Hammack)
+### Email [danhamma@gmail.com] (danhamma@gmail.com)
+`
+
+init();
