@@ -68,8 +68,8 @@ const questions = [
 
     }
 
-function writeToFile(fileName, answers) {
-    fs.writeToFile(fileName, answers, function(err) {
+function writeFile(fileName, answers) {
+    fs.writeFile(fileName, answers, function(err) {
         if (err) {
             console.log(err);
             return
@@ -82,7 +82,7 @@ function writeToFile(fileName, answers) {
 function init() {
     inquirer.prompt(questions)
     .then(function(answers){
-        writeToFile("Readme" ,generateMarkdown(answers));
+        writeFile("Readme.md" ,generateMarkdown(answers));
     })
 }
 
@@ -112,8 +112,8 @@ ${answers.contribution}
 ### Questions
 ${answers.questions}
 ### Github
-[https://github.com/Dan-Hammack] (https://github.com/Dan-Hammack)
-### Email [danhamma@gmail.com] (danhamma@gmail.com)
+[https://github.com/] ("")
+### Email 
 `
 
 init();
